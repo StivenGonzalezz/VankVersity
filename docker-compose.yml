@@ -1,0 +1,33 @@
+services:
+
+  video-service:
+    build: 
+      context: ./video-service
+      dockerfile: Dockerfile
+    container_name: video-service
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=video-db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=videodb
+    depends_on:
+      - video-db
+
+  video-db:
+    image: postgres:15
+    container_name: video-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: videodb
+    ports:
+      - "5440:5432"
+    volumes:
+      - video_db_data:/var/lib/postgresql/data
+
+volumes:
+  video_db_data:
